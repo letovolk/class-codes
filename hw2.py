@@ -32,20 +32,19 @@ def total_cost_calculator_exhaustive_search(cost_matrix_e, sequence):
         total_cost += cost_matrix_e[sequence[i]][sequence[i + 1]]
     return total_cost
 
-def optimal_sequence_finder_exhaustive_search(cost_matrix_e):
+def min_cost_finder_exhaustive_search(cost_matrix_e):
     n = len(cost_matrix_e)
-    min_cost = float("inf")
-    optimal_sequence = None
-    
+    min_cost_e = float("inf")
+
     for sequence in itertools.permutations(range(n)):
         cost = total_cost_calculator_exhaustive_search(cost_matrix_e, sequence)
-        if cost < min_cost:
-            min_cost = cost
-            optimal_sequence = sequence
+        if cost < min_cost_e:
+            min_cost_e = cost
+            
     
-    return optimal_sequence, min_cost
+    return min_cost_e
 
-
+""""
 total_time = 0
 matrix_size = 6
 
@@ -53,20 +52,20 @@ matrix_size = 6
 for ith_cost_matrix in cost_matrix_list:
     start_time = time.time()  
 
-    optimal_sequence, min_cost = optimal_sequence_finder_exhaustive_search(ith_cost_matrix)
+    min_cost_e = min_cost_finder_exhaustive_search(ith_cost_matrix)
     
     end_time = time.time()  
     iteration_time = end_time - start_time
     total_time += iteration_time  
     
-    print(f"Optimal sequence for the {matrix_size}x{matrix_size} matrix: {optimal_sequence}")
-    print(f"Minimum cost: {min_cost}")
+    #print(f"Optimal sequence for the {matrix_size}x{matrix_size} matrix: {optimal_sequence}")
+    print(f"Minimum cost: {min_cost_e}")
     print(f"Time elapsed for the {matrix_size}x{matrix_size} matrix: {iteration_time: } seconds\n")
     matrix_size +=1
 
 print(f"Total time for all matrices: {total_time: } seconds")
 print(" ")
-
+"""
 
 
 print("Recursive Approach Starts")
@@ -106,11 +105,11 @@ def total_cost_calculator_recursive_approach(cost_matrix_r, visited, not_visited
 
             # Update minimum cost
             min_cost = min(min_cost, total_cost)
-
-    # Store in cache
+            
     cache[current_task] = min_cost
     return min_cost
 
+"""
 total_time = 0
 matrix_size = 6
 
@@ -133,4 +132,53 @@ for jth_cost_matrix in cost_matrix_list:
     matrix_size += 1
 
 print(f"Total time for all matrices: {total_time: } seconds")
+"""
+
+
+
+def min_cost_and_timer_printer(cost_matrix_list):
+    total_time_exhaustive = 0
+    total_time_recursive = 0
+    #total_time_heuristic = 0
+    matrix_size = 6
+
+    for ith_cost_matrix in cost_matrix_list:
+        # Exhaustive search method
+        start_time = time.time()
+        min_cost_e = min_cost_finder_exhaustive_search(ith_cost_matrix)
+        end_time = time.time()
+        iteration_time_e = end_time - start_time
+        total_time_exhaustive += iteration_time_e
+        print(f"Exhaustive Search - Minimum cost: {min_cost_e}")
+        print(f"Time elapsed for {matrix_size}x{matrix_size} matrix (Exhaustive): {iteration_time_e: } seconds\n")
+
+        # Recursive method
+        start_time = time.time()
+        initial_visited = [False] * len(ith_cost_matrix)
+        initial_not_visited = [True] * len(ith_cost_matrix)
+        min_cost_r = total_cost_calculator_recursive_approach(ith_cost_matrix, initial_visited, initial_not_visited)
+        end_time = time.time()
+        iteration_time_r = end_time - start_time
+        total_time_recursive += iteration_time_r
+        print(f"Recursive Search - Minimum cost: {min_cost_r}")
+        print(f"Time elapsed for {matrix_size}x{matrix_size} matrix (Recursive): {iteration_time_r: } seconds\n")
+
+        # Heuristic method
+        #start_time = time.time()
+        #min_cost_h = min_cost_finder_heuristic(ith_cost_matrix)
+        #end_time = time.time()
+        #iteration_time_h = end_time - start_time
+        #total_time_heuristic += iteration_time_h
+        #print(f"Heuristic Search - Minimum cost: {min_cost_h}")
+        #print(f"Time elapsed for {matrix_size}x{matrix_size} matrix (Heuristic): {iteration_time_h: } seconds\n")
+        print("*")
+        matrix_size += 1
+
+    # Print total time for all methods
+    print(f"Total time for Exhaustive Search: {total_time_exhaustive: } seconds")
+    print(f"Total time for Recursive Search: {total_time_recursive: } seconds")
+    #print(f"Total time for Heuristic Search: {total_time_heuristic: } seconds\n")
+
+
+print(min_cost_and_timer_printer(cost_matrix_list))
 
